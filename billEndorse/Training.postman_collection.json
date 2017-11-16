@@ -1,0 +1,318 @@
+{
+	"id": "78bff591-03b2-a142-5183-bd121b556982",
+	"name": "Training",
+	"description": "",
+	"order": [
+		"5d7a1e93-52d9-4fff-2493-6aefd958bd4b",
+		"0f2a2473-0af6-8019-74b2-9c54d154c2e8",
+		"edf50243-9c73-880e-aef8-dfae49b1041b",
+		"f32995d0-fe6e-d67e-49fe-a087085716ee",
+		"d13064ed-3238-e892-d085-44d1380c1e8c",
+		"694066ae-3fde-3e69-e90e-05d8382e075c",
+		"a76749a5-f6d8-2ee7-18df-5598f8614135",
+		"5432f568-6938-c2dd-f756-d740f75204b6",
+		"8a64948f-a81c-0699-e876-1c0dfff73b40",
+		"45823c93-90cc-0350-d8f5-bd8141732f6b"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1510662921895,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "0f2a2473-0af6-8019-74b2-9c54d154c2e8",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:4000/login",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "78bff591-03b2-a142-5183-bd121b556982",
+			"data": [],
+			"dataMode": "raw",
+			"name": "login",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1510818903642,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"username\": \"admin\",\n    \"orgName\": \"org1\",\n    \"password\": \"123456\"\n}"
+		},
+		{
+			"id": "45823c93-90cc-0350-d8f5-bd8141732f6b",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:4000/channels/mychannel/chaincodes/mycc/invoke",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510679238697,
+			"name": "invokeCommon",
+			"description": "",
+			"collectionId": "78bff591-03b2-a142-5183-bd121b556982",
+			"responses": [],
+			"rawModeData": "{\n\t\"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTA3MTUyMjMsInVzZXJuYW1lIjoiYWRtaW4iLCJvcmdOYW1lIjoib3JnMSIsImlhdCI6MTUxMDY3OTIyM30.f0zIcy51HJbhhgeGg7klSAmn1WhD4TJMggln_6OLJo8\",\n\t\"peers\": [\"peer1\"],\n\t\"fcn\":\"issue\",\n\t\"args\":[\"{\\\"BillInfo_Amt\\\":\\\"111\\\",\\\"BillInfo_Type\\\":\\\"111\\\",\\\"BillInfo_IsseDate\\\":\\\"111\\\",\\\"BillInfo_DueDate\\\":\\\"111\\\",\\\"Drwr_CmId\\\":\\\"111\\\",\\\"Drwr_Acct\\\":\\\"111\\\",\\\"Accptr_CmId\\\":\\\"111\\\",\\\"Accptr_Acct\\\":\\\"111\\\",\\\"Pyee_CmId\\\":\\\"111\\\",\\\"Pyee_Acct\\\":\\\"111\\\",\\\"Hodr_CmId\\\":\\\"111\\\",\\\"Hodr_Acct\\\":\\\"111\\\"}\"]\n}"
+		},
+		{
+			"id": "5432f568-6938-c2dd-f756-d740f75204b6",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:4000/channels/mychannel/chaincodes/mycc/query",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510818963693,
+			"name": "queryByBillNo",
+			"description": "",
+			"collectionId": "78bff591-03b2-a142-5183-bd121b556982",
+			"responses": [],
+			"rawModeData": "{\n\t\"peers\": [\"peer1\"],\n\t\"fcn\":\"queryByBillNo\",\n\t\"args\":[\"1510727596333824255\"],\n\t\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTA3NjM1ODQsInVzZXJuYW1lIjoiYWRtaW4iLCJvcmdOYW1lIjoib3JnMSIsImlhdCI6MTUxMDcyNzU4NH0.tXr5lwongSOGK0ALOBrKUh3jgqjDjcF1x6T4gMtJ5Fg\"\n}"
+		},
+		{
+			"id": "5d7a1e93-52d9-4fff-2493-6aefd958bd4b",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:4000/users",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510818867338,
+			"name": "users测试使用",
+			"description": "",
+			"collectionId": "78bff591-03b2-a142-5183-bd121b556982",
+			"responses": [],
+			"rawModeData": "{\n\t\"username\": \"admin\",\n    \"orgName\": \"org1\",\n    \"password\": \"123456\"\n}"
+		},
+		{
+			"id": "694066ae-3fde-3e69-e90e-05d8382e075c",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:4000/channels/mychannel/chaincodes/mycc/invoke",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510717938733,
+			"name": "reject",
+			"description": "",
+			"collectionId": "78bff591-03b2-a142-5183-bd121b556982",
+			"responses": [],
+			"rawModeData": "{\n\t\"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTA3NTI0MDIsInVzZXJuYW1lIjoiYWRtaW4iLCJvcmdOYW1lIjoib3JnMSIsImlhdCI6MTUxMDcxNjQwMn0.2MuciHWqLSQLZrKopveBsInYFSVbbf9Xc1tVE578nRA\",\n\t\"peers\": [\"peer1\"],\n\t\"fcn\":\"reject\",\n\t\"args\":[\"1510717781558095060\",\"E11111\",\"E22222\"]\n}"
+		},
+		{
+			"id": "8a64948f-a81c-0699-e876-1c0dfff73b40",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:4000/channels/mychannel/chaincodes/mycc/query",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510818838042,
+			"name": "queryMyWaitBill",
+			"description": "",
+			"collectionId": "78bff591-03b2-a142-5183-bd121b556982",
+			"responses": [],
+			"rawModeData": "{\n\t\"peers\": [\"peer1\"],\n\t\"fcn\":\"queryMyWaitBill\",\n\t\"args\":[\"ACMID\"],\n\t\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTA4MDM1MzcsInVzZXJuYW1lIjoiYWRtaW4iLCJvcmdOYW1lIjoib3JnMSIsImlhdCI6MTUxMDc2NzUzN30.HHuZLn8W3IIPAP-L5lDx_D7lYHBFTPzseUmvrXJ6vgs\"\n}"
+		},
+		{
+			"id": "a76749a5-f6d8-2ee7-18df-5598f8614135",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:4000/channels/mychannel/chaincodes/mycc/query",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510818953582,
+			"name": "queryMyBill",
+			"description": "",
+			"collectionId": "78bff591-03b2-a142-5183-bd121b556982",
+			"responses": [],
+			"rawModeData": "{\n\t\"peers\": [\"peer1\"],\n\t\"fcn\":\"queryMyBill\",\n\t\"args\":[\"111\"],\n\t\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTA3NjM1ODQsInVzZXJuYW1lIjoiYWRtaW4iLCJvcmdOYW1lIjoib3JnMSIsImlhdCI6MTUxMDcyNzU4NH0.tXr5lwongSOGK0ALOBrKUh3jgqjDjcF1x6T4gMtJ5Fg\"\n}"
+		},
+		{
+			"id": "d13064ed-3238-e892-d085-44d1380c1e8c",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:4000/channels/mychannel/chaincodes/mycc/invoke",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510818961324,
+			"name": "accept",
+			"description": "",
+			"collectionId": "78bff591-03b2-a142-5183-bd121b556982",
+			"responses": [],
+			"rawModeData": "{\n\t\"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTA3NjM1ODQsInVzZXJuYW1lIjoiYWRtaW4iLCJvcmdOYW1lIjoib3JnMSIsImlhdCI6MTUxMDcyNzU4NH0.tXr5lwongSOGK0ALOBrKUh3jgqjDjcF1x6T4gMtJ5Fg\",\n\t\"peers\": [\"peer1\"],\n\t\"fcn\":\"accept\",\n\t\"args\":[\"1510727596333824255\",\"E11111\",\"E22222\"]\n}"
+		},
+		{
+			"id": "edf50243-9c73-880e-aef8-dfae49b1041b",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:4000/channels/mychannel/chaincodes/mycc/invoke",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510818962963,
+			"name": "issue",
+			"description": "",
+			"collectionId": "78bff591-03b2-a142-5183-bd121b556982",
+			"responses": [],
+			"rawModeData": "{\n\t\"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTA4MDM1MzcsInVzZXJuYW1lIjoiYWRtaW4iLCJvcmdOYW1lIjoib3JnMSIsImlhdCI6MTUxMDc2NzUzN30.HHuZLn8W3IIPAP-L5lDx_D7lYHBFTPzseUmvrXJ6vgs\",\n\t\"peers\": [\"peer1\"],\n\t\"fcn\":\"issue\",\n\t\"args\":[\"{\\\"BillInfoAmt\\\":\\\"222\\\",\\\"BillInfoType\\\":\\\"111\\\",\\\"BillInfoIsseDate\\\":\\\"111\\\",\\\"BillInfoDueDate\\\":\\\"111\\\",\\\"DrwrCmID\\\":\\\"111\\\",\\\"DrwrAcct\\\":\\\"111\\\",\\\"AccptrCmID\\\":\\\"111\\\",\\\"AccptrAcct\\\":\\\"111\\\",\\\"PyeeCmID\\\":\\\"111\\\",\\\"PyeeAcct\\\":\\\"111\\\",\\\"HodrCmID\\\":\\\"ACMID\\\",\\\"HodrAcct\\\":\\\"111\\\"}\"]\n}"
+		},
+		{
+			"id": "f32995d0-fe6e-d67e-49fe-a087085716ee",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:4000/channels/mychannel/chaincodes/mycc/invoke",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510818962126,
+			"name": "endorse",
+			"description": "",
+			"collectionId": "78bff591-03b2-a142-5183-bd121b556982",
+			"responses": [],
+			"rawModeData": "{\n\t\"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTA3NjM1ODQsInVzZXJuYW1lIjoiYWRtaW4iLCJvcmdOYW1lIjoib3JnMSIsImlhdCI6MTUxMDcyNzU4NH0.tXr5lwongSOGK0ALOBrKUh3jgqjDjcF1x6T4gMtJ5Fg\",\n\t\"peers\": [\"peer1\"],\n\t\"fcn\":\"endorse\",\n\t\"args\":[\"1510727596333824255\",\"E11111\",\"E22222\"]\n}"
+		}
+	]
+}
