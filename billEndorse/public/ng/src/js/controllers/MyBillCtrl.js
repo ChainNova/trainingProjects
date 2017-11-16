@@ -9,11 +9,7 @@ app.controller('MyBillCtrl', ['$scope','$localStorage','$state','HttpService','R
     function render() {
 
         if($localStorage.loginuser) {
-            var data = {
-                name: $localStorage.loginuser.name,
-                cmId: $localStorage.loginuser.cmId,
-                Acct: $localStorage.loginuser.Acct
-            }
+
         }else {
             $state.go('access.signin');
         }
@@ -31,16 +27,9 @@ app.controller('MyBillCtrl', ['$scope','$localStorage','$state','HttpService','R
 
     render();
 
-    $scope.view = function (billNo) {
-        // alert(billNo);
-        var data = {
-            name: $localStorage.loginuser.name,
-            cmId: $localStorage.loginuser.cmId,
-            Acct: $localStorage.loginuser.Acct,
-            billNo: billNo
-        }
+    $scope.view = function (bill) {
 
-        HttpService.post(REST_URL.query, {fcn: "queryByBillNo", args:[billNo.BillInfoID]}).then(function (response) {
+        HttpService.post(REST_URL.query, {fcn: "queryByBillNo", args:[bill.BillInfoID]}).then(function (response) {
             var bill = JSON.parse(response.data.message);
             $scope.item = bill;
 
@@ -50,12 +39,12 @@ app.controller('MyBillCtrl', ['$scope','$localStorage','$state','HttpService','R
                 $scope.$apply();
             }
 
-            open (billNo);
+            open (bill);
         });
 
     }
 
-    function open (billNo) {
+    function open (bill) {
         var modalInstance = $modal.open({
             templateUrl: 'myBillInfo.html',
             controller: 'MyBillModalInstanceCtrl',
@@ -70,18 +59,9 @@ app.controller('MyBillCtrl', ['$scope','$localStorage','$state','HttpService','R
         modalInstance.result.then(function (selected) {
 
             // endr request
-            var data = {
-                billNo: billNo,
-                name: $localStorage.loginuser.name,
-                cmId: $localStorage.loginuser.cmId,
-                Acct: $localStorage.loginuser.Acct,
-                EndrCmID: selected.item.EndrCmID,
-                EndrAcct: selected.item.EndrAcct,
-
-            }
 
             HttpService.post(REST_URL.invoke, {fcn:"endorse",
-                args:[billNo.BillInfoID, selected.item.EndrCmID,selected.item.EndrAcct]}).then(function (response) {
+                args:[bill.BillInfoID, selected.item.EndrCmID,selected.item.EndrAcct]}).then(function (response) {
                 DialogService.open('infoDialog', {
                     scope: $scope,
                     title: '背书成功',

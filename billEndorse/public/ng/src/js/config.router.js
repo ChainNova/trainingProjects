@@ -50,32 +50,6 @@ angular.module('app')
                   url: '/table',
                   template: '<div ui-view></div>'
               })
-              .state('app.table.static', {
-                  url: '/static',
-                  templateUrl: 'tpl/table_static.html'
-              })
-              .state('app.table.datatable', {
-                  url: '/datatable',
-                  templateUrl: 'tpl/table_datatable.html'
-              })
-              .state('app.table.footable', {
-                  url: '/footable',
-                  templateUrl: 'tpl/table_footable.html'
-              })
-              .state('app.table.grid', {
-                  url: '/grid',
-                  templateUrl: 'tpl/table_grid.html',
-                  resolve: {
-                      deps: ['$ocLazyLoad',
-                        function( $ocLazyLoad ){
-                          return $ocLazyLoad.load('ngGrid').then(
-                              function(){
-                                  return $ocLazyLoad.load('js/controllers/grid.js');
-                              }
-                          );
-                      }]
-                  }
-              })
 
               .state('app.table.publishBill', {
                   url: '/publishBill',
@@ -96,22 +70,7 @@ angular.module('app')
                   url: '/page',
                   template: '<div ui-view></div>'
               })
-              .state('app.page.editProfile', {
-                  url: '/editProfile',
-                  templateUrl: 'tpl/page_editProfile.html'
-                  //,
-                  //resolve: {
-                  //    deps: ['$ocLazyLoad',
-                  //      function( $ocLazyLoad ){
-                  //        return $ocLazyLoad.load(['js/controllers/EditProfileCtrl.js']);
-                  //    }]
-                  //}
-              })
 
-              .state('app.page.profile', {
-                  url: '/profile',
-                  templateUrl: 'tpl/page_profile.html'
-              })
 
               //access
               .state('access', {
@@ -139,10 +98,7 @@ angular.module('app')
                   //    }]
                   //}
               })
-              .state('access.forgotpwd', {
-                  url: '/forgotpwd',
-                  templateUrl: 'tpl/page_forgotpwd.html'
-              })
+
               .state('access.404', {
                   url: '/404',
                   templateUrl: 'tpl/page_404.html'

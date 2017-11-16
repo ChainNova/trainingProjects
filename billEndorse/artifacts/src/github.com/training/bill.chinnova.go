@@ -23,25 +23,25 @@ const Bill_Prefix = "Bill_"
 const IndexName = "holderName~billNo"
 
 type Bill struct {
-	BillInfoID string `json:BillInfoID`
-	BillInfoAmt string `json:BillInfoAmt`
-	BillInfoType string `json:BillInfoType`
-	BillInfoIsseDate string `json:BillInfoIsseDate`
-	BillInfoDueDate string `json:BillInfoDueDate`
-	DrwrCmID string `json:DrwrCmID`
-	DrwrAcct string `json:DrwrAcct`
-	AccptrCmID string `json:AccptrCmID`
-	AccptrAcct string `json:AccptrAcct`
-	PyeeCmID string `json:PyeeCmID`
-	PyeeAcct string `json:PyeeAcct`
-	HodrCmID string `json:HodrCmID`
-	HodrAcct string `json:HodrAcct`
-	WaitEndorserCmID string `json:WaitEndorserCmID`
-	WaitEndorserAcct string `json:WaitEndorserAcct`
-	RejectEndorserCmID string `json:RejectEndorserCmID`
-	RejectEndorserAcct string `json:RejectEndorserAcct`
-	State string `json:State`
-	History []HistoryItem `json:History`
+	BillInfoID string `json:BillInfoID`                //票据号码
+	BillInfoAmt string `json:BillInfoAmt`              //票据金额
+	BillInfoType string `json:BillInfoType`            //票据类型
+	BillInfoIsseDate string `json:BillInfoIsseDate`    //票据出票日期
+	BillInfoDueDate string `json:BillInfoDueDate`      //票据到期日期
+	DrwrCmID string `json:DrwrCmID`                    //出票人证件号码
+	DrwrAcct string `json:DrwrAcct`                    //出票人名称
+	AccptrCmID string `json:AccptrCmID`                //承兑人证件号码
+	AccptrAcct string `json:AccptrAcct`                //承兑人名称
+	PyeeCmID string `json:PyeeCmID`                    //收款人证件号码
+	PyeeAcct string `json:PyeeAcct`                    //收款人名称
+	HodrCmID string `json:HodrCmID`                    //持票人证件号码
+	HodrAcct string `json:HodrAcct`                    //持票人名称
+	WaitEndorserCmID string `json:WaitEndorserCmID`    //待背书人证件号码
+	WaitEndorserAcct string `json:WaitEndorserAcct`    //待背书人名称
+	RejectEndorserCmID string `json:RejectEndorserCmID`//拒绝背书人证件号码
+	RejectEndorserAcct string `json:RejectEndorserAcct`//拒绝背书人名称
+	State string `json:State`                          //票据状态
+	History []HistoryItem `json:History`               //背书历史
 }
 
 type HistoryItem struct {
@@ -174,6 +174,8 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 
 	bill.WaitEndorserCmID = args[1]
 	bill.WaitEndorserAcct = args[2]
+	bill.RejectEndorserCmID = ""
+	bill.RejectEndorserAcct = ""
 	bill.State = BillInfo_State_EndrWaitSign
 
 	_, bl = a.putBill(stub, bill)
@@ -387,12 +389,12 @@ func (a *BillChaincode) queryByBillNo(stub shim.ChaincodeStubInterface, args []s
 		var hisItem HistoryItem
 		hisItem.TxId = historyData.TxId //copy transaction id over
 		json.Unmarshal(historyData.Value, &hisBill) //un stringify it aka JSON.parse()
-		if historyData.Value == nil {              //marble has been deleted
+		if historyData.Value == nil {              //bill has been deleted
 			var emptyBill Bill
 			hisItem.Bill = emptyBill //copy nil marble
 		} else {
 			json.Unmarshal(historyData.Value, &hisBill) //un stringify it aka JSON.parse()
-			hisItem.Bill = hisBill                          //copy marble over
+			hisItem.Bill = hisBill                          //copy bill over
 		}
 		history = append(history, hisItem) //add this tx to the list
 	}
@@ -405,8 +407,6 @@ func (a *BillChaincode) queryByBillNo(stub shim.ChaincodeStubInterface, args []s
 	}
 	return shim.Success(b)
 }
-
-
 
 func (a *BillChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
     function,args := stub.GetFunctionAndParameters()
@@ -437,8 +437,6 @@ func (a *BillChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	chaincodeLogger.Infof("%s",res)
     return shim.Error(res)
 }
-
-
 
 func main() {
     if err := shim.Start(new(BillChaincode)); err != nil {

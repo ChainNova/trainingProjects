@@ -13,11 +13,8 @@ app.controller('PublishBillCtrl', ['$scope', '$rootScope', '$http', '$modal', '$
         $scope.item.AccptrAcct = 'C11111111';
         $scope.item.PyeeCmID = 'ShoukuanId';
         $scope.item.PyeeAcct = 'S11111111';
-        $scope.item.HodrCmID = 'ACMID';
-        $scope.item.HodrAcct = 'A公司';
-
-
-
+        $scope.item.HodrCmID = $localStorage.loginuser.cmId;
+        $scope.item.HodrAcct = $localStorage.loginuser.Acct;
 
         $scope.save = function () {
 

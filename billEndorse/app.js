@@ -31,7 +31,6 @@ var path = require('path');
 
 require('./config.js');
 var config = require('./config.json');
-var api = require('./api');
 
 var hfc = require('fabric-client');
 
@@ -55,7 +54,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: false
 }));
-app.use('/rest', api);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // set secret variable
@@ -209,8 +207,6 @@ app.post('/login', function(req, res) {
         res.json(getErrorMessage('\'password\''));
         return;
     }
-
-
 
     new Promise(function (resolve, reject) {
         let oldtoken = process.TOKENS[username];
