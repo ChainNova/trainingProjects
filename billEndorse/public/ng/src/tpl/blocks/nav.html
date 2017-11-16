@@ -1,0 +1,40 @@
+
+<ul class="nav">
+  <li ng-class="{active:$state.includes('app.table')}">
+    <a href class="auto">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+      <!-- <b class="label bg-primary pull-right">2</b> -->
+      <i class="glyphicon glyphicon-list"></i>
+      <span>工作流程</span>
+    </a>
+    <ul class="nav nav-sub dk">
+      
+      <li ui-sref-active="active" > <!--ng-show="app.role == '管理员'"-->
+        <a ui-sref="app.table.publishBill">
+          <span>发布票据</span>
+        </a>
+      </li>
+      <li ui-sref-active="active">
+        <a ui-sref="app.table.myBill">
+          <span>我的票据</span>
+        </a>
+      </li>
+      <li ui-sref-active="active">
+        <a ui-sref="app.table.myUnBill">
+          <span>待签收票据</span>
+        </a>
+      </li>
+      <!--<li ui-sref-active="active">-->
+        <!--<a ui-sref="app.table.clientMgr">-->
+          <!--<span>票据流转信息</span>-->
+        <!--</a>-->
+      <!--</li>-->
+
+    </ul>
+  </li>
+
+  
+</ul>

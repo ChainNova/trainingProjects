@@ -1,0 +1,94 @@
+<div class="modal-body wrapper-lg" ng-controller="PublishBillCtrl">
+    <form>
+
+        <div class="row">
+            <div class="col-sm-12">
+
+
+
+                <div class="form-group">
+                    <label>票据号码</label>
+                    <input name="BillInfoID" type="text" class="form-control" placeholder="输入票据号码"
+                           ng-model="item.BillInfoID" required>
+                </div>
+                <div class="form-group">
+                    <label>票据金额</label>
+                    <input name="BillInfoAmt" type="text" class="form-control" placeholder="输入票据金额"
+                           ng-model="item.BillInfoAmt"  required>
+                </div>
+                <div class="form-group">
+                    <label>票据类型</label>
+                    <input name="BillInfoType" type="text" class="form-control" placeholder="输入票据类型"
+                           ng-model="item.BillInfoType" required>
+                </div>
+                <div class="form-group">
+                    <label>票据出票日期</label>
+                    <input name="BillInfoIsseDate" type="text" class="form-control" placeholder="输入出票日期"
+                           ng-model="item.BillInfoIsseDate" required>
+                </div>
+                <div class="form-group">
+                    <label>票据到期日期</label>
+                    <input name="BillInfoDueDate" type="text" class="form-control" placeholder="输入票据到期日期"
+                           ng-model="item.BillInfoDueDate" required>
+                </div>
+                <div class="form-group">
+                    <label>出票人名称</label>
+                    <input name="DrwrAcct" type="text" class="form-control" placeholder="输入出票人名称"
+                           ng-model="item.DrwrAcct" required>
+                </div>
+                <div class="form-group">
+                    <label>出票人证件号码</label>
+                    <input name="DrwrCmID" type="text" class="form-control" placeholder="输入出票人证件号码"
+                           ng-model="item.DrwrCmID" required>
+                </div>
+
+                <div class="form-group">
+                    <label>承兑人名称</label>
+                    <input name="AccptrAcct" type="text" class="form-control" placeholder="输入承兑人名称"
+                           ng-model="item.AccptrAcct"  required>
+                </div>
+                <div class="form-group">
+                    <label>承兑人证件号码</label>
+                    <input name="AccptrCmID" type="text" class="form-control" placeholder="输入承兑人证件号码"
+                           ng-model="item.AccptrCmID" required>
+                </div>
+
+                <div class="form-group">
+                    <label>收款人名称</label>
+                    <input name="PyeeAcct" type="text" class="form-control" placeholder="输入收款人名称"
+                           ng-model="item.PyeeAcct" required>
+                </div>
+                <div class="form-group">
+                    <label>收款人证件号码</label>
+                    <input name="PyeeCmID" type="text" class="form-control" placeholder="输入收款人证件号码"
+                           ng-model="item.PyeeCmID" required>
+                </div>
+
+                <div class="form-group">
+                    <label>持票人名称</label>
+                    <input name="HodrAcct" type="text" class="form-control" placeholder="输入持票人名称"
+                           ng-model="item.HodrAcct" ng-value="'A公司'" required>
+                </div>
+                <div class="form-group">
+                    <label>持票人证件号码</label>
+                    <input name="HodrCmID" type="text" class="form-control" placeholder="输入持票人证件号码"
+                           ng-model="item.HodrCmID" ng-value="'ACMID'" required>
+                </div>
+
+                <div class="button m-t-lg">
+                    <button type="submit" class="btn btn-success m-t-n-xs" ng-click="save()">
+                        <strong>提交</strong></button>
+                    <button type="submit" class="btn btn-default m-t-n-xs" ng-click="cancel()"><strong>取消</strong>
+                    </button>
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </form>
+
+
+</div>

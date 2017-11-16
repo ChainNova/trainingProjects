@@ -1,0 +1,63 @@
+      <!-- navbar header -->
+      <div class="navbar-header {{app.settings.navbarHeaderColor}}">
+        <button class="pull-right visible-xs dk" ui-toggle-class="show" data-target=".navbar-collapse">
+          <i class="glyphicon glyphicon-cog"></i>
+        </button>
+        <button class="pull-right visible-xs" ui-toggle-class="off-screen" data-target=".app-aside" ui-scroll="app">
+          <i class="glyphicon glyphicon-align-justify"></i>
+        </button>
+
+        <!-- brand -->
+        <a href="#/" class="navbar-brand text-lt">
+          <!-- <i class="fa fa-btc"></i> -->
+          <img src="img/logo.png" alt="." class="hide">
+          <span class="hidden-folded m-l-xs">{{app.name}}</span>
+        </a>
+        <!-- / brand -->
+      </div>
+      <!-- / navbar header -->
+
+      <!-- navbar collapse -->
+      <div class="collapse pos-rlt navbar-collapse box-shadow {{app.settings.navbarCollapseColor}}">
+        <!-- buttons -->
+        <div class="nav navbar-nav hidden-xs">
+          <a href class="btn no-shadow navbar-btn" ng-click="app.settings.asideFolded = !app.settings.asideFolded">
+            <i class="fa {{app.settings.asideFolded ? 'fa-indent' : 'fa-dedent'}} fa-fw"></i>
+          </a>
+         <!--  <a href class="btn no-shadow navbar-btn" ui-toggle-class="show" target="#aside-user">
+            <i class="icon-user fa-fw"></i>
+          </a> -->
+        </div>
+        <!-- / buttons -->
+
+        <!-- link and dropdown -->
+        <ul class="nav navbar-nav">
+          <li class="dropdown" dropdown>
+            <a href class="dropdown-toggle clear" dropdown-toggle>
+              <span class=" pull-right m-l-sm">
+                <!-- <img src="img/a0.jpg" alt="..."> -->
+                <div>{{app.loginname}}</div>
+                <!-- <i class="on md b-white bottom"></i> -->
+              </span>
+
+               <b class="caret"></b>
+            </a>
+            <!-- dropdown -->
+            <ul class="dropdown-menu animated fadeInRight w">
+
+              <li>
+                <a ui-sref="app.page.editProfile">用户信息修改</a>
+              </li>
+
+              <li class="divider"></li>
+              <li>
+                <a ui-sref="access.signin">安全退出</a>
+              </li>
+            </ul>
+            <!-- / dropdown -->
+          </li>
+        </ul>
+        <!-- / navbar right -->
+
+      </div>
+      <!-- / navbar collapse -->

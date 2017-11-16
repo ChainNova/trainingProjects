@@ -1,0 +1,18 @@
+<div>
+        <div class="ngdialog-message">
+            <h3>{{title}}</h3>
+        </div>
+        <div class="form-group">
+			<label>{{message}}</label>
+			<textarea type="text" class="form-control" 
+			placeholder="输入留言内容" ng-model="newMessage" />    
+				
+	    </div>
+	    <div class="ngdialog-buttons">
+            <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="addWeChatMsg(newMessage)">发送</button>
+        </div>
+        <div ng-grid="weChatGridOptions" style="min-height: 220px"></div>
+        <div class="ngdialog-buttons">
+            <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog('Cancel')">关闭</button>
+        </div>
+</div>

@@ -12,5 +12,28 @@
          "secret":"adminpw"
       }
    ],
-   "request-timeout":450000
+   "request-timeout":450000,
+   "mockupUsers": [
+      {
+         "username": "admin",
+         "name": "管理员",
+         "passwd": "123456",
+         "cmId": "HODR01",
+         "Acct": "管理员"
+      },
+      {
+         "username": "a",
+         "name": "A公司",
+         "passwd": "123456",
+         "cmId": "ACMID",
+         "Acct": "A公司"
+      },
+      {
+         "username": "b",
+         "name": "B公司",
+         "passwd": "123456",
+         "cmId": "BCMID",
+         "Acct": "B公司"
+      }
+   ]
 }

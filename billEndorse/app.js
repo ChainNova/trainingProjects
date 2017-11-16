@@ -27,8 +27,12 @@ var expressJWT = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var bearerToken = require('express-bearer-token');
 var cors = require('cors');
+var path = require('path');
 
 require('./config.js');
+var config = require('./config.json');
+var api = require('./api');
+
 var hfc = require('fabric-client');
 
 var helper = require('./app/helper.js');
@@ -51,6 +55,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: false
 }));
+app.use('/rest', api);
+app.use(express.static(path.join(__dirname, 'public')));
+
 // set secret variable
 app.set('secret', 'thisismysecret');
 // app.use(expressJWT({
@@ -59,30 +66,41 @@ app.set('secret', 'thisismysecret');
 // 	path: ['/users']
 // }));
 app.use(bearerToken());
+
+process.TOKENS = [];
+
 app.use(function(req, res, next) {
-	if (req.originalUrl.indexOf('/users') >= 0) {
+	if (req.originalUrl.indexOf('/users') >= 0 || req.originalUrl.indexOf('/ng') >= 0 || req.originalUrl.indexOf('/login') >= 0) {
 		return next();
 	}
 
-	var token = req.token || req.body.token;
-	jwt.verify(token, app.get('secret'), function(err, decoded) {
-		if (err) {
-			res.send({
-				success: false,
-				message: 'Failed to authenticate token. Make sure to include the ' +
-					'token returned from /users call in the authorization header ' +
-					' as a Bearer token'
-			});
-			return;
-		} else {
-			// add the decoded user name and org name to the request object
-			// for the downstream code to use
-			req.username = decoded.username;
-			req.orgname = decoded.orgName;
-			logger.debug(util.format('Decoded from JWT token: username - %s, orgname - %s', decoded.username, decoded.orgName));
-			return next();
-		}
-	});
+    var token = req.token || req.body.token;
+    jwt.verify(token, app.get('secret'), function(err, decoded) {
+        if (err || process.TOKENS[decoded.username] == null) {
+            res.send({
+                success: false,
+                message: 'Failed to authenticate token. Make sure to include the ' +
+                'token returned from /createAccount call in the authorization header ' +
+                ' as a Bearer token'
+            });
+            return;
+        } else {
+            if (process.TOKENS[decoded.username] != null && process.TOKENS[decoded.username] != token) {
+                res.send({
+                    success: false,
+                    message: 'token has expired'
+                });
+                return;
+            }
+            // add the decoded user name and org name to the request object
+            // for the downstream code to use
+            req.username = decoded.username;
+            req.orgname = decoded.orgName;
+            logger.info(util.format('Decoded from JWT token: username - %s, orgname - %s', decoded.username, decoded.orgName));
+            return next();
+        }
+    });
+
 });
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -100,6 +118,22 @@ function getErrorMessage(field) {
 		message: field + ' field is missing or Invalid in the request'
 	};
 	return response;
+}
+
+// manage token
+function updateToken(username, token) {
+    console.log(JSON.stringify(process.TOKENS));
+    try {
+        console.log(token);
+        process.TOKENS[username] = token;
+        return token;
+    } catch(err) {
+        return null;
+    }
+}
+
+function clearToken(username) {
+    process.TOKENS[username] = null;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -127,6 +161,7 @@ app.post('/users', function(req, res) {
 	}, app.get('secret'));
 	helper.getRegisteredUsers(username, orgName, true).then(function(response) {
 		if (response && typeof response !== 'string') {
+            updateToken(username, token);
 			response.token = token;
 			res.json(response);
 		} else {
@@ -137,6 +172,106 @@ app.post('/users', function(req, res) {
 		}
 	});
 });
+
+function getMockupUserInfo(userName) {
+    var mockupUser = {
+        "username": "",
+        "name": "",
+        "passwd": "",
+        "cmID": "",
+        "Acct": ""
+    };
+    for (var user of config.mockupUsers) {
+        if (user.username == userName) {
+            mockupUser = user;
+            break;
+        }
+    }
+    return mockupUser;
+}
+// login user
+app.post('/login', function(req, res) {
+    var username = req.body.username;
+    var orgName = req.body.orgName;
+    var password = req.body.password;
+    logger.info('End point : /users');
+    logger.info('User name : ' + username);
+    logger.info('Org name  : ' + orgName);
+    if (!username) {
+        res.json(getErrorMessage('\'username\''));
+        return;
+    }
+    if (!orgName) {
+        res.json(getErrorMessage('\'orgName\''));
+        return;
+    }
+    if (!password) {
+        res.json(getErrorMessage('\'password\''));
+        return;
+    }
+
+
+
+    new Promise(function (resolve, reject) {
+        let oldtoken = process.TOKENS[username];
+        if (oldtoken != null) {
+
+            jwt.verify(oldtoken, app.get('secret'), function(err, decoded) {
+                if (decoded.password != password) {
+                    reject({});
+                }
+                resolve({});
+            });
+        }else {
+            resolve({});
+        }
+    }).then(function () {
+
+        var token = jwt.sign({
+            exp: Math.floor(Date.now() / 1000) + parseInt(config.jwt_expiretime),
+            username: username,
+            orgName: orgName,
+            password: password
+        }, app.get('secret'));
+        helper.getRegisteredUsers(username, orgName, true).then(function(response) {
+            if (response && typeof response !== 'string') {
+                updateToken(username, token);
+
+                var mockupUser = getMockupUserInfo(username)
+                res.status(200).json({
+                    success : true,
+                    secret : response.secret,
+                    message : response.message,
+                    token : token,
+					user : mockupUser
+                });
+            } else {
+                res.json({
+                    success: false,
+                    message: response
+                });
+            }
+        });
+
+    }, function () {
+        res.json({
+            success: false,
+            message: 'password incorrect, please retry'
+        });
+        return;
+    });
+
+});
+
+
+app.post('/logout', function(req, res) {
+    clearToken(req.username);
+    res.json({
+        success: true,
+        message: 'logout well'
+    });
+});
+
 // Create Channel
 app.post('/channels', function(req, res) {
 	logger.info('<<<<<<<<<<<<<<<<< C R E A T E  C H A N N E L >>>>>>>>>>>>>>>>>');
@@ -278,7 +413,10 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName/invoke', function(req
 
 	invoke.invokeChaincode(peers, channelName, chaincodeName, fcn, args, req.username, req.orgname)
 	.then(function(message) {
-		res.send(message);
+		res.send({
+            success: true,
+            message: message
+        });
 	});
 });
 // Query on chaincode on target peers
@@ -317,7 +455,10 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName/query', function(req,
 
 	query.queryChaincode(peer, channelName, chaincodeName, args, fcn, req.username, req.orgname)
 	.then(function(message) {
-		res.send(message);
+		res.send({
+            success: true,
+            message: message
+        });
 	});
 });
 //  Query Get Block by BlockNumber

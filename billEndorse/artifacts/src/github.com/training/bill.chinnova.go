@@ -34,10 +34,12 @@ type Bill struct {
 	AccptrAcct string `json:AccptrAcct`
 	PyeeCmID string `json:PyeeCmID`
 	PyeeAcct string `json:PyeeAcct`
-	Hodr_CmId string `json:Hodr_CmId`
-	Hodr_Acct string `json:Hodr_Acct`
-	WaitEndorser_CmId string `json:WaitEndoser_CmId`
-	WaitEndorser_Acct string `json:WaitEndoser_Acct`
+	HodrCmID string `json:HodrCmID`
+	HodrAcct string `json:HodrAcct`
+	WaitEndorserCmID string `json:WaitEndorserCmID`
+	WaitEndorserAcct string `json:WaitEndorserAcct`
+	RejectEndorserCmID string `json:RejectEndorserCmID`
+	RejectEndorserAcct string `json:RejectEndorserAcct`
 	State string `json:State`
 	History []HistoryItem `json:History`
 }
@@ -133,7 +135,10 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 		res := getRetString(1,"ChainnovaChaincode Invoke issue unmarshal failed")
 		return shim.Error(res)
 	}
-	bill.BillInfoID = fmt.Sprintf("%d", time.Now().UnixNano())
+	if bill.BillInfoID == "" {
+		bill.BillInfoID = fmt.Sprintf("%d", time.Now().UnixNano())
+	}
+
 	bill.State = BillInfo_State_NewPublish
 
 	_, bl := a.putBill(stub, bill)
@@ -142,7 +147,7 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 		return shim.Error(res)
 	}
 
-	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.Hodr_CmId, bill.BillInfoID})
+	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.HodrCmID, bill.BillInfoID})
 	if err != nil {
 		res := getRetString(1,"ChainnovaChaincode Invoke issue put search table failed")
 		return shim.Error(res)
@@ -167,8 +172,8 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 		return shim.Error(res)
 	}
 
-	bill.WaitEndorser_CmId = args[1]
-	bill.WaitEndorser_Acct = args[2]
+	bill.WaitEndorserCmID = args[1]
+	bill.WaitEndorserAcct = args[2]
 	bill.State = BillInfo_State_EndrWaitSign
 
 	_, bl = a.putBill(stub, bill)
@@ -177,7 +182,7 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 		return shim.Error(res)
 	}
 
-	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.WaitEndorser_CmId, bill.BillInfoID})
+	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.WaitEndorserCmID, bill.BillInfoID})
 	if err != nil {
 		res := getRetString(1,"ChainnovaChaincode Invoke endorse put search table failed")
 		return shim.Error(res)
@@ -203,17 +208,17 @@ func (a *BillChaincode) accept(stub shim.ChaincodeStubInterface, args []string) 
 	}
 
     // remove old holder_id from search table
-	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.Hodr_CmId, bill.BillInfoID})
+	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.HodrCmID, bill.BillInfoID})
 	if err != nil {
 		res := getRetString(1,"ChainnovaChaincode Invoke accept put search table failed")
 		return shim.Error(res)
 	}
 	stub.DelState(holderNameBillNoIndexKey)
 
-	bill.Hodr_CmId = args[1]
-	bill.Hodr_Acct = args[2]
-	bill.WaitEndorser_CmId = ""
-	bill.WaitEndorser_Acct = ""
+	bill.HodrCmID = args[1]
+	bill.HodrAcct = args[2]
+	bill.WaitEndorserCmID = ""
+	bill.WaitEndorserAcct = ""
 	bill.State = BillInfo_State_EndrSigned
 
 	_, bl = a.putBill(stub, bill)
@@ -247,8 +252,10 @@ func (a *BillChaincode) reject(stub shim.ChaincodeStubInterface, args []string) 
 	}
 	stub.DelState(holderNameBillNoIndexKey)
 
-	bill.WaitEndorser_CmId = ""
-	bill.WaitEndorser_Acct = ""
+	bill.WaitEndorserCmID = ""
+	bill.WaitEndorserAcct = ""
+	bill.RejectEndorserCmID = args[1]
+	bill.RejectEndorserAcct = args[2]
 	bill.State = BillInfo_State_EndrReject
 
 	_, bl = a.putBill(stub, bill)
@@ -261,7 +268,7 @@ func (a *BillChaincode) reject(stub shim.ChaincodeStubInterface, args []string) 
 	return shim.Success(res)
 }
 
-//  0 - Holder or Endorser CmId ;
+//  0 - Holder CmId ;
 func (a *BillChaincode) queryMyBill(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args)!=1 {
 		res := getRetString(1,"ChainnovaChaincode queryMyBill args!=1")
@@ -302,6 +309,48 @@ func (a *BillChaincode) queryMyBill(stub shim.ChaincodeStubInterface, args []str
 	b, err := json.Marshal(billList)
 	if err != nil {
 		e := fmt.Sprintf("ChainnovaChaincode Marshal queryMyBill billList error:%s", err)
+		return shim.Error(e)
+	}
+	return shim.Success(b)
+}
+
+//  0 - Endorser CmId ;
+func (a *BillChaincode) queryMyWaitBill(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	if len(args)!=1 {
+		res := getRetString(1,"ChainnovaChaincode queryMyWaitBill args!=1")
+		return shim.Error(res)
+	}
+
+	billsIterator, err := stub.GetStateByPartialCompositeKey(IndexName, []string{args[0]})
+	if err != nil {
+
+	}
+	defer billsIterator.Close()
+
+	var billList = []Bill{}
+
+	for billsIterator.HasNext() {
+		kv, _ := billsIterator.Next()
+
+		_, compositeKeyParts, err := stub.SplitCompositeKey(kv.Key)
+		if err != nil {
+			fmt.Println("SplitCompositeKey error:", err)
+			continue
+		}
+
+		bill, bl := a.getBill(stub, compositeKeyParts[1])
+		if !bl {
+			res := getRetString(1,"ChainnovaChaincode queryMyWaitBill get bill error")
+			return shim.Error(res)
+		}
+		if bill.State == BillInfo_State_EndrWaitSign && bill.WaitEndorserCmID == args[0] {
+			billList = append(billList, bill)
+		}
+	}
+
+	b, err := json.Marshal(billList)
+	if err != nil {
+		e := fmt.Sprintf("ChainnovaChaincode Marshal queryMyWaitBill billList error:%s", err)
 		return shim.Error(e)
 	}
 	return shim.Success(b)
@@ -379,6 +428,8 @@ func (a *BillChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return a.queryMyBill(stub, args)
 	} else if function == "queryByBillNo" {
 		return a.queryByBillNo(stub, args)
+	} else if function == "queryMyWaitBill" {
+		return a.queryMyWaitBill(stub, args)
 	}
 
     res := getRetString(1,"ChainnovaChaincode Unkown method!")

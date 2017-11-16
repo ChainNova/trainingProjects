@@ -201,6 +201,40 @@ var getAdminUser = function(userOrg) {
 	});
 };
 
+var getLoginUsers = function(username, userOrg, isJson) {
+    var member;
+    var client = getClientForOrg(userOrg);
+    var enrollmentSecret = null;
+    return hfc.newDefaultKeyValueStore({
+        path: getKeyStoreForOrg(getOrgName(userOrg))
+    }).then((store) => {
+        client.setStateStore(store);
+        // clearing the user context before switching
+        client._userContext = null;
+        return client.getUserContext(username, true).then((user) => {
+            if (user && user.isEnrolled()) {
+                logger.info('Successfully loaded member from persistence');
+                return user;
+            } else {
+                return username+" login failed";
+            }
+        });
+    }).then((user) => {
+        if (isJson && isJson === true) {
+            var response = {
+                success: true,
+                secret: user._enrollmentSecret,
+                message: username + ' enrolled Successfully',
+            };
+            return response;
+        }
+        return user;
+    }, (err) => {
+        logger.error(util.format('Failed to get registered user: %s, error: %s', username, err.stack ? err.stack : err));
+        return '' + err;
+    });
+};
+
 var getRegisteredUsers = function(username, userOrg, isJson) {
 	var member;
 	var client = getClientForOrg(userOrg);
@@ -320,3 +354,4 @@ exports.newPeers = newPeers;
 exports.newEventHubs = newEventHubs;
 exports.getRegisteredUsers = getRegisteredUsers;
 exports.getOrgAdmin = getOrgAdmin;
+exports.getLoginUsers = getLoginUsers;

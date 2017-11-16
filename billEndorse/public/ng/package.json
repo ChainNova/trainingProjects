@@ -1,0 +1,33 @@
+{
+  "name": "BootstrapAngularAdminWebApp",
+  "version": "2.2.0",
+  "description": "Admin web application template with Bootstrap 3 and AngularJS.",
+  "scripts": {
+    "start": "node node_modules/http-server/bin/http-server -o"
+  },
+  "keywords": [],
+  "repository": "https://gitlab.com/Heyflat/angulr.git",
+  "author": "Flatfull",
+  "license": "Envato REGULAR LICENSE",
+  "dependencies": {
+    "grunt-contrib-cssmin": "^0.14.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-usemin": "^3.1.1"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-bower-install-simple": "^0.9.3",
+    "grunt-bump": "0.0.15",
+    "grunt-changelog": "^0.2.2",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-htmlmin": "^0.3.0",
+    "grunt-contrib-uglify": "^0.5.1",
+    "grunt-recess": "^1.0.0",
+    "grunt-swig": "^0.2.1",
+    "gruntfile-gtx": "^0.3.0",
+    "http-server": "^0.6.1",
+    "require-directory": "^2.0.0"
+  }
+}
