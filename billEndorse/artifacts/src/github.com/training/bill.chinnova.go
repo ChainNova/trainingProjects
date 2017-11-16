@@ -143,11 +143,11 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 		return shim.Error(res)
 	}
 	// 根据票号 查找是否票号已存在
-	//bill, bl := a.getBill(stub, args[0])
-	//if bl {
-	//	res := getRetString(1,"ChainnovaChaincode Invoke issue failed : the billNo has exist ")
-	//	return shim.Error(res)
-	//}
+	_, existbl := a.getBill(stub, bill.BillInfoID)
+	if existbl {
+		res := getRetString(1,"ChainnovaChaincode Invoke issue failed : the billNo has exist ")
+		return shim.Error(res)
+	}
 
 	if bill.BillInfoID == "" {
 		bill.BillInfoID = fmt.Sprintf("%d", time.Now().UnixNano())
