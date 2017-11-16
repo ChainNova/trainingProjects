@@ -31,6 +31,7 @@ var invokeChaincode = function(peerNames, channelName, chaincodeName, fcn, args,
 	var targets = (peerNames) ? helper.newPeers(peerNames, org) : undefined;
 	var tx_id = null;
 
+	var txRequest = null;
 	return helper.getRegisteredUsers(username, org).then((user) => {
 		tx_id = client.newTransactionID();
 		logger.debug(util.format('Sending transaction "%j"', tx_id));
@@ -45,8 +46,8 @@ var invokeChaincode = function(peerNames, channelName, chaincodeName, fcn, args,
 
 		if (targets)
 			request.targets = targets;
-
-		return channel.sendTransactionProposal(request);
+        var txRequest = channel.sendTransactionProposal(request)
+		return txRequest;
 	}, (err) => {
 		logger.error('Failed to enroll user \'' + username + '\'. ' + err);
 		throw new Error('Failed to enroll user \'' + username + '\'. ' + err);
@@ -61,7 +62,13 @@ var invokeChaincode = function(peerNames, channelName, chaincodeName, fcn, args,
 				one_good = true;
 				logger.info('transaction proposal was good');
 			} else {
+                logger.error(proposalResponses[i]);
 				logger.error('transaction proposal was bad');
+				if (proposalResponses[i].message != null) {
+                    return proposalResponses[i].message;
+                }
+				// add error return
+                // throw new Error(proposalResponses[i].response);
 			}
 			all_good = all_good & one_good;
 		}
@@ -143,8 +150,13 @@ var invokeChaincode = function(peerNames, channelName, chaincodeName, fcn, args,
 			logger.info('Successfully sent transaction to the orderer.');
 			return tx_id.getTransactionID();
 		} else {
-			logger.error('Failed to order the transaction. Error code: ' + response.status);
-			return 'Failed to order the transaction. Error code: ' + response.status;
+			if (response.status != null) {
+                logger.error('Failed to order the transaction. Error code: ' + response.status);
+                return 'Failed to order the transaction. Error code: ' + response.status;
+			}else {
+                return response;
+			}
+
 		}
 	}, (err) => {
 		logger.error('Failed to send transaction due to error: ' + err.stack ? err

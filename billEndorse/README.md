@@ -19,7 +19,7 @@ cd trainingProjects/billEndorse/public/ng
 bower install
 
 cd trainingProjects/billEndorse 
-./stepupFabricNetwork.sh
+./setupFabricNetwork.sh
 ./createChannelAndInstallChaincode.sh
 ```
 

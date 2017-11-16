@@ -142,6 +142,13 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 		res := getRetString(1,"ChainnovaChaincode Invoke issue unmarshal failed")
 		return shim.Error(res)
 	}
+	// 根据票号 查找是否票号已存在
+	//bill, bl := a.getBill(stub, args[0])
+	//if bl {
+	//	res := getRetString(1,"ChainnovaChaincode Invoke issue failed : the billNo has exist ")
+	//	return shim.Error(res)
+	//}
+
 	if bill.BillInfoID == "" {
 		bill.BillInfoID = fmt.Sprintf("%d", time.Now().UnixNano())
 	}
@@ -176,6 +183,11 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 	bill, bl := a.getBill(stub, args[0])
 	if !bl {
 		res := getRetString(1,"ChainnovaChaincode Invoke endorse get bill error")
+		return shim.Error(res)
+	}
+
+	if bill.HodrCmID == args[1] {
+		res := getRetString(1,"ChainnovaChaincode Invoke endorse failed: Endorser should not be same with current Holder")
 		return shim.Error(res)
 	}
     // 更改票据信息和状态并保存票据: 添加待背书人信息,重制已拒绝背书人, 票据状态改为待背书
@@ -302,8 +314,8 @@ func (a *BillChaincode) queryMyBill(stub shim.ChaincodeStubInterface, args []str
 		// 取得持票人名下的票号
 		_, compositeKeyParts, err := stub.SplitCompositeKey(kv.Key)
 		if err != nil {
-			fmt.Println("SplitCompositeKey error:", err)
-			continue
+			res := getRetString(1,"ChainnovaChaincode queryMyBill SplitCompositeKey error")
+			return shim.Error(res)
 		}
         // 根据票号取得票据
 		bill, bl := a.getBill(stub, compositeKeyParts[1])
@@ -316,8 +328,8 @@ func (a *BillChaincode) queryMyBill(stub shim.ChaincodeStubInterface, args []str
 	// 取得并返回票据数组 
 	b, err := json.Marshal(billList)
 	if err != nil {
-		e := fmt.Sprintf("ChainnovaChaincode Marshal queryMyBill billList error:%s", err)
-		return shim.Error(e)
+		res := getRetString(1,"ChainnovaChaincode Marshal queryMyBill billList error")
+		return shim.Error(res)
 	}
 	return shim.Success(b)
 }
@@ -332,7 +344,8 @@ func (a *BillChaincode) queryMyWaitBill(stub shim.ChaincodeStubInterface, args [
     // 以背书人ID从search表中批量查询所持有的票号
 	billsIterator, err := stub.GetStateByPartialCompositeKey(IndexName, []string{args[0]})
 	if err != nil {
-
+		res := getRetString(1,"ChainnovaChaincode queryMyWaitBill GetStateByPartialCompositeKey error")
+		return shim.Error(res)
 	}
 	defer billsIterator.Close()
 
@@ -343,8 +356,8 @@ func (a *BillChaincode) queryMyWaitBill(stub shim.ChaincodeStubInterface, args [
 		// 从search表中批量查询与背书人有关的票号
 		_, compositeKeyParts, err := stub.SplitCompositeKey(kv.Key)
 		if err != nil {
-			fmt.Println("SplitCompositeKey error:", err)
-			continue
+			res := getRetString(1,"ChainnovaChaincode queryMyWaitBill SplitCompositeKey error")
+			return shim.Error(res)
 		}
         // 根据票号取得票据
 		bill, bl := a.getBill(stub, compositeKeyParts[1])
@@ -360,8 +373,8 @@ func (a *BillChaincode) queryMyWaitBill(stub shim.ChaincodeStubInterface, args [
     // 取得并返回票据数组 
 	b, err := json.Marshal(billList)
 	if err != nil {
-		e := fmt.Sprintf("ChainnovaChaincode Marshal queryMyWaitBill billList error:%s", err)
-		return shim.Error(e)
+		res := getRetString(1,"ChainnovaChaincode Marshal queryMyWaitBill billList error")
+		return shim.Error(res)
 	}
 	return shim.Success(b)
 }
@@ -383,7 +396,8 @@ func (a *BillChaincode) queryByBillNo(stub shim.ChaincodeStubInterface, args []s
 	// 取得背书历史: 通过fabric api取得该票据的变更历史
 	resultsIterator, err := stub.GetHistoryForKey(Bill_Prefix+args[0])
 	if err != nil {
-		return shim.Error(err.Error())
+		res := getRetString(1,"ChainnovaChaincode queryByBillNo GetHistoryForKey error")
+		return shim.Error(res)
 	}
 	defer resultsIterator.Close()
 
@@ -392,7 +406,8 @@ func (a *BillChaincode) queryByBillNo(stub shim.ChaincodeStubInterface, args []s
 	for resultsIterator.HasNext() {
 		historyData, err := resultsIterator.Next()
 		if err != nil {
-			return shim.Error(err.Error())
+			res := getRetString(1,"ChainnovaChaincode queryByBillNo resultsIterator.Next() error")
+			return shim.Error(res)
 		}
 
 		var hisItem HistoryItem
@@ -412,8 +427,8 @@ func (a *BillChaincode) queryByBillNo(stub shim.ChaincodeStubInterface, args []s
 
 	b, err := json.Marshal(bill)
 	if err != nil {
-		e := fmt.Sprintf("ChainnovaChaincode Marshal queryByBillNo billList error:%s", err)
-		return shim.Error(e)
+		res := getRetString(1,"ChainnovaChaincode Marshal queryByBillNo billList error")
+		return shim.Error(res)
 	}
 	return shim.Success(b)
 }

@@ -407,13 +407,31 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName/invoke', function(req
 		return;
 	}
 
-	invoke.invokeChaincode(peers, channelName, chaincodeName, fcn, args, req.username, req.orgname)
-	.then(function(message) {
-		res.send({
-            success: true,
-            message: message
-        });
-	});
+    try {
+        invoke.invokeChaincode(peers, channelName, chaincodeName, fcn, args, req.username, req.orgname)
+            .then(function(message) {
+            	if (message.indexOf('error') > -1) {
+                    res.send({
+                        success: false,
+                        message: message
+                    });
+				}else {
+                    res.send({
+                        success: true,
+                        message: message
+                    });
+				}
+
+            }, function (err) {
+                console.log("!!!!!!!!!!!!!!!!!");
+                console.log(err);
+            })
+    } catch(err) {
+        console.log("!!!!!!!!!!!!!!!!!");
+        console.log(err);
+        return null;
+    }
+
 });
 // Query on chaincode on target peers
 app.post('/channels/:channelName/chaincodes/:chaincodeName/query', function(req, res) {
