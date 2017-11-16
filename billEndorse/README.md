@@ -22,3 +22,5 @@ cd trainingProjects/billEndorse
 ./stepupFabricNetwork.sh
 ./createChannelAndInstallChaincode.sh
 ```
+
+access http://localhost:4000/ng/src/
