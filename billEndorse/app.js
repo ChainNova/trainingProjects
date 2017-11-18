@@ -208,6 +208,20 @@ app.post('/login', function(req, res) {
         return;
     }
 
+    var mockupUser = null;
+    for (var user of config.mockupUsers) {
+        if (user.username == username) {
+            mockupUser = user;
+            break;
+        }
+    }
+    if (mockupUser == null) {
+        res.json({
+            success: false,
+            message: "用户不存在"
+        });
+	}
+
     new Promise(function (resolve, reject) {
         let oldtoken = process.TOKENS[username];
         if (oldtoken != null) {

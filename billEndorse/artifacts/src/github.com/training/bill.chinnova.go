@@ -6,7 +6,6 @@ import (
     "github.com/hyperledger/fabric/core/chaincode/shim"
     pb "github.com/hyperledger/fabric/protos/peer"
     "encoding/json"
-	"time"
 )
 // logger
 var chaincodeLogger = flogging.MustGetLogger("ChainnovaChaincode")
@@ -142,12 +141,9 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 		res := getRetString(1,"ChainnovaChaincode Invoke issue unmarshal failed")
 		return shim.Error(res)
 	}
-	// 根据票号 查找是否票号已存在
-	// 如stat中已有同号票据 返回error message
+	// TODO 根据票号 查找是否票号已存在
+	// TODO 如stat中已有同号票据 返回error message
 
-	if bill.BillInfoID == "" {
-		bill.BillInfoID = fmt.Sprintf("%d", time.Now().UnixNano())
-	}
 	// 更改票据信息和状态并保存票据:票据状态设为新发布
 	bill.State = BillInfo_State_NewPublish
     // 保存票据
