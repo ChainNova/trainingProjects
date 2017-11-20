@@ -143,6 +143,11 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 	}
 	// TODO 根据票号 查找是否票号已存在
 	// TODO 如stat中已有同号票据 返回error message
+	_, existbl := a.getBill(stub, bill.BillInfoID)
+	if existbl {
+		res := getRetString(1,"ChainnovaChaincode Invoke issue failed : the billNo has exist ")
+		return shim.Error(res)
+	}
 
 	// 更改票据信息和状态并保存票据:票据状态设为新发布
 	bill.State = BillInfo_State_NewPublish
@@ -182,6 +187,42 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 		res := getRetString(1,"ChainnovaChaincode Invoke endorse failed: Endorser should not be same with current Holder")
 		return shim.Error(res)
 	}
+
+	// 查询背书人是否以前持有过该数据
+	// 取得背书历史: 通过fabric api取得该票据的变更历史
+	resultsIterator, err := stub.GetHistoryForKey(Bill_Prefix+args[0])
+	if err != nil {
+		res := getRetString(1,"ChainnovaChaincode queryByBillNo GetHistoryForKey error")
+		return shim.Error(res)
+	}
+	defer resultsIterator.Close()
+
+	var hisBill Bill
+	for resultsIterator.HasNext() {
+		historyData, err := resultsIterator.Next()
+		if err != nil {
+			res := getRetString(1,"ChainnovaChaincode queryByBillNo resultsIterator.Next() error")
+			return shim.Error(res)
+		}
+
+		var hodlerNameList []string
+		json.Unmarshal(historyData.Value, &hisBill) //un stringify it aka JSON.parse()
+		if historyData.Value == nil {              //bill has been deleted
+			var emptyBill Bill
+			hisBill = emptyBill //copy nil marble
+		} else {
+			json.Unmarshal(historyData.Value, &hisBill) //un stringify it aka JSON.parse()
+			hisBill = hisBill                          //copy bill over
+		}
+		hodlerNameList = append(hodlerNameList, hisBill.HodrCmID) //add this tx to the list
+
+		if hisBill.HodrCmID == args[1] {
+			res := getRetString(1,"ChainnovaChaincode Invoke endorse failed: Endorser should not be the bill history holder")
+			return shim.Error(res)
+		}
+	}
+
+
     // 更改票据信息和状态并保存票据: 添加待背书人信息,重制已拒绝背书人, 票据状态改为待背书
 	bill.WaitEndorserCmID = args[1]
 	bill.WaitEndorserAcct = args[2]
@@ -221,12 +262,12 @@ func (a *BillChaincode) accept(stub shim.ChaincodeStubInterface, args []string) 
 	}
 
     // 维护search表: 以前手持票人ID和票号构造复合key 从search表中删除该key 以便前手持票人无法再查到该票据
-	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.HodrCmID, bill.BillInfoID})
-	if err != nil {
-		res := getRetString(1,"ChainnovaChaincode Invoke accept put search table failed")
-		return shim.Error(res)
-	}
-	stub.DelState(holderNameBillNoIndexKey)
+	//holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.HodrCmID, bill.BillInfoID})
+	//if err != nil {
+		//res := getRetString(1,"ChainnovaChaincode Invoke accept put search table failed")
+		//return shim.Error(res)
+	//}
+	//stub.DelState(holderNameBillNoIndexKey)
 
 	// 更改票据信息和状态并保存票据: 将前手持票人改为背书人,重置待背书人,票据状态改为背书签收
 	bill.HodrCmID = args[1]
