@@ -6,6 +6,7 @@ import (
     "github.com/hyperledger/fabric/core/chaincode/shim"
     pb "github.com/hyperledger/fabric/protos/peer"
     "encoding/json"
+	"time"
 )
 // logger
 var chaincodeLogger = flogging.MustGetLogger("ChainnovaChaincode")
@@ -21,6 +22,9 @@ const Bill_Prefix = "Bill_"
 
 // search表的映射名
 const IndexName = "holderName~billNo"
+
+
+const HolderIdDayTimeBillNoIndexName = "holderId~dayTime-billNo"
 
 // 票据
 type Bill struct {
@@ -148,6 +152,39 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 		res := getRetString(1,"ChainnovaChaincode Invoke issue failed : the billNo has exist ")
 		return shim.Error(res)
 	}
+
+
+	var dayTime = time.Now().Format("2017-11-20")
+
+	resultIterator, err := stub.GetStateByPartialCompositeKey(HolderIdDayTimeBillNoIndexName, []string{bill.HodrCmID, dayTime})
+	if err != nil {
+		res := getRetString(1,"ChainnovaChaincode Invoke issue get bill list error")
+		return shim.Error(res)
+	}
+	defer resultIterator.Close()
+
+
+	var count = 0
+	for resultIterator.HasNext() {
+		_, _ = resultIterator.Next()
+
+		count ++
+
+		if count >= 5 {
+			res := getRetString(1,"ChainnovaChaincode Invoke issue The bill holder has more than 5 bills on the same day")
+			return shim.Error(res)
+		}
+	}
+
+
+	holderIdDayTimeBillNoIndexKey, err := stub.CreateCompositeKey(HolderIdDayTimeBillNoIndexName, []string{bill.HodrCmID, dayTime, bill.BillInfoID})
+	if err != nil {
+		res := getRetString(1,"ChainnovaChaincode Invoke issue put search table failed")
+		return shim.Error(res)
+	}
+	stub.PutState(holderIdDayTimeBillNoIndexKey, []byte(time.Now().Format("2017-11-20 12:56:56")))
+
+
 
 	// 更改票据信息和状态并保存票据:票据状态设为新发布
 	bill.State = BillInfo_State_NewPublish
