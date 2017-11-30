@@ -278,12 +278,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1510818962963,
+			"time": 1511141940225,
 			"name": "issue",
 			"description": "",
 			"collectionId": "78bff591-03b2-a142-5183-bd121b556982",
 			"responses": [],
-			"rawModeData": "{\n\t\"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTA4MDM1MzcsInVzZXJuYW1lIjoiYWRtaW4iLCJvcmdOYW1lIjoib3JnMSIsImlhdCI6MTUxMDc2NzUzN30.HHuZLn8W3IIPAP-L5lDx_D7lYHBFTPzseUmvrXJ6vgs\",\n\t\"peers\": [\"peer1\"],\n\t\"fcn\":\"issue\",\n\t\"args\":[\"{\\\"BillInfoAmt\\\":\\\"222\\\",\\\"BillInfoType\\\":\\\"111\\\",\\\"BillInfoIsseDate\\\":\\\"111\\\",\\\"BillInfoDueDate\\\":\\\"111\\\",\\\"DrwrCmID\\\":\\\"111\\\",\\\"DrwrAcct\\\":\\\"111\\\",\\\"AccptrCmID\\\":\\\"111\\\",\\\"AccptrAcct\\\":\\\"111\\\",\\\"PyeeCmID\\\":\\\"111\\\",\\\"PyeeAcct\\\":\\\"111\\\",\\\"HodrCmID\\\":\\\"ACMID\\\",\\\"HodrAcct\\\":\\\"111\\\"}\"]\n}"
+			"rawModeData": "{\n\t\"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTA4MDM1MzcsInVzZXJuYW1lIjoiYWRtaW4iLCJvcmdOYW1lIjoib3JnMSIsImlhdCI6MTUxMDc2NzUzN30.HHuZLn8W3IIPAP-L5lDx_D7lYHBFTPzseUmvrXJ6vgs\",\n\t\"peers\": [\"peer1\"],\n\t\"fcn\":\"issue\",\n\t\"args\":[\"{\\\"BillInfoID\\\":\\\"POC10000998\\\",\\\"BillInfoAmt\\\":\\\"222\\\",\\\"BillInfoType\\\":\\\"111\\\",\\\"BillInfoIsseDate\\\":\\\"111\\\",\\\"BillInfoDueDate\\\":\\\"111\\\",\\\"DrwrCmID\\\":\\\"111\\\",\\\"DrwrAcct\\\":\\\"111\\\",\\\"AccptrCmID\\\":\\\"111\\\",\\\"AccptrAcct\\\":\\\"111\\\",\\\"PyeeCmID\\\":\\\"111\\\",\\\"PyeeAcct\\\":\\\"111\\\",\\\"HodrCmID\\\":\\\"ACMID\\\",\\\"HodrAcct\\\":\\\"A公司\\\"}\"]\n}"
 		},
 		{
 			"id": "f32995d0-fe6e-d67e-49fe-a087085716ee",

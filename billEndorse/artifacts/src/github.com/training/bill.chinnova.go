@@ -24,7 +24,7 @@ const Bill_Prefix = "Bill_"
 const IndexName = "holderName~billNo"
 
 
-const HolderIdDayTimeBillNoIndexName = "holderId~dayTime-billNo"
+const HolderIdDayTimeBillTypeBillNoIndexName = "holderId~dayTime-billType-billNo"
 
 // 票据
 type Bill struct {
@@ -154,9 +154,17 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 	}
 
 
-	var dayTime = time.Now().Format("2017-11-20")
 
-	resultIterator, err := stub.GetStateByPartialCompositeKey(HolderIdDayTimeBillNoIndexName, []string{bill.HodrCmID, dayTime})
+	timestamp, err := stub.GetTxTimestamp()
+	if err != nil {
+		res := getRetString(1,"ChainnovaChaincode Invoke issue failed :get time stamp failed ")
+		return shim.Error(res)
+	}
+	chaincodeLogger.Error("%s", timestamp)
+
+	var dayTime = time.Now().Format("2009-10-10")
+
+	resultIterator, err := stub.GetStateByPartialCompositeKey(HolderIdDayTimeBillTypeBillNoIndexName, []string{bill.HodrCmID, dayTime, bill.BillInfoType})
 	if err != nil {
 		res := getRetString(1,"ChainnovaChaincode Invoke issue get bill list error")
 		return shim.Error(res)
@@ -171,13 +179,13 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 		count ++
 
 		if count >= 5 {
-			res := getRetString(1,"ChainnovaChaincode Invoke issue The bill holder has more than 5 bills on the same day")
+			res := getRetString(1,"ChainnovaChaincode Invoke issue The bill holder has more than 5 bills on the same day by the same type")
 			return shim.Error(res)
 		}
 	}
 
 
-	holderIdDayTimeBillNoIndexKey, err := stub.CreateCompositeKey(HolderIdDayTimeBillNoIndexName, []string{bill.HodrCmID, dayTime, bill.BillInfoID})
+	holderIdDayTimeBillNoIndexKey, err := stub.CreateCompositeKey(HolderIdDayTimeBillTypeBillNoIndexName, []string{bill.HodrCmID, dayTime, bill.BillInfoType, bill.BillInfoID})
 	if err != nil {
 		res := getRetString(1,"ChainnovaChaincode Invoke issue put search table failed")
 		return shim.Error(res)
