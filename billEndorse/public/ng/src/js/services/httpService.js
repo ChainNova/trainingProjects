@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('app').factory('HttpService', [ '$http','$q','$httpParamSerializerJQLike','REST_URL','$rootScope', 'DialogService','$state','toaster',
-                                               function($http,$q,$httpParamSerializerJQLike,REST_URL,$rootScope,DialogService,$state,toaster){
+angular.module('app').factory('HttpService', [ '$http','$q','REST_URL','$rootScope', 'DialogService','$state','toaster',
+                                               function($http,$q,REST_URL,$rootScope,DialogService,$state,toaster){
 	return {
 			    
 	    post : function(url, data) {
@@ -23,7 +23,6 @@ angular.module('app').factory('HttpService', [ '$http','$q','$httpParamSerialize
           		    // 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
                       'Content-Type': 'application/json;charset=utf-8'
           		  },
-          		  // transformRequest: $httpParamSerializerJQLike,
           		  data: data
           		 };
 	    	
